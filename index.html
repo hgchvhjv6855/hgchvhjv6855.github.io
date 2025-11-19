@@ -3,213 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>专属资源分享平台</title>
+    <title>简易云同步资源平台</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        body {
-            background: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            background: #2c3e50;
-            color: white;
-            border-radius: 8px;
-        }
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        .auth-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .auth-btn {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: none;
-            border-radius: 5px;
-            background: #3498db;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .auth-btn:hover {
-            background: #2980b9;
-        }
-        .admin-login {
-            display: none;
-            max-width: 400px;
-            margin: 0 auto 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .admin-login.active {
-            display: block;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background: #2ecc71;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .submit-btn:hover {
-            background: #27ae60;
-        }
-        .upload-section {
-            display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        .upload-section.active {
-            display: block;
-        }
-        .file-input {
-            margin-bottom: 15px;
-        }
-        .resource-list {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .resource-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .resource-item:last-child {
-            border-bottom: none;
-        }
-        .resource-info h3 {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        .resource-meta {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .download-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            background: #e67e22;
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .download-btn:hover {
-            background: #d35400;
-        }
-        .delete-btn {
-            padding: 8px 15px;
-            margin-left: 10px;
-            border: none;
-            border-radius: 5px;
-            background: #e74c3c;
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .delete-btn:hover {
-            background: #c0392b;
-        }
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 10px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        body { background: #f8f9fa; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { text-align: center; margin-bottom: 20px; color: #333; }
+        .btn-group { text-align: center; margin: 20px 0; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 0 5px; font-size: 16px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; } /* 新增删除按钮样式 */
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        .hidden { display: none; }
+        .resource-item { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .resource-info h3 { font-size: 18px; margin-bottom: 5px; }
+        .resource-meta { color: #666; font-size: 14px; }
+        .error { color: red; text-align: center; margin: 10px 0; }
+        .action-btns { display: flex; gap: 10px; } /* 按钮间距 */
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>专属资源分享平台</h1>
-            <p>管理员可上传/管理资源 | 成员仅可下载资源</p>
-        </header>
-
-        <div class="auth-section">
-            <button class="auth-btn" id="admin-btn">管理员登录</button>
-            <button class="auth-btn" id="member-btn">普通成员进入</button>
+        <h1>资源分享平台（云同步）</h1>
+        
+        <!-- 按钮区域 -->
+        <div class="btn-group">
+            <button class="btn btn-primary" id="adminLoginBtn">管理员登录</button>
+            <button class="btn btn-primary" id="memberEnterBtn">普通成员进入</button>
         </div>
 
         <!-- 管理员登录表单 -->
-        <div class="admin-login" id="admin-login">
+        <div id="adminLoginForm" class="hidden">
             <h2>管理员登录</h2>
             <div class="form-group">
-                <label for="admin-password">管理员密码</label>
-                <input type="password" id="admin-password" placeholder="输入管理员密码">
+                <label for="adminPwd">管理员密码</label>
+                <input type="password" id="adminPwd" placeholder="输入密码">
             </div>
-            <button class="submit-btn" id="login-submit">登录</button>
-            <div class="error-message" id="login-error"></div>
+            <button class="btn btn-success" id="doLoginBtn">登录</button>
+            <div class="error" id="loginError"></div>
         </div>
 
-        <!-- 管理员上传区域 -->
-        <div class="upload-section" id="upload-section">
+        <!-- 上传区域 -->
+        <div id="uploadArea" class="hidden">
             <h2>上传资源</h2>
             <div class="form-group">
-                <label for="resource-name">资源名称</label>
-                <input type="text" id="resource-name" placeholder="输入资源名称">
+                <label for="resourceName">资源名称</label>
+                <input type="text" id="resourceName" placeholder="输入资源名称">
             </div>
             <div class="form-group">
-                <label for="resource-file">选择文件</label>
-                <input type="file" id="resource-file" class="file-input">
+                <label for="resourceFile">选择文件</label>
+                <input type="file" id="resourceFile">
             </div>
-            <button class="submit-btn" id="upload-submit">上传资源</button>
+            <button class="btn btn-success" id="uploadBtn">上传</button>
         </div>
 
         <!-- 资源列表 -->
-        <div class="resource-list" id="resource-list">
+        <div id="resourceList">
             <h2>资源列表</h2>
-            <div id="resources-container">
-                <!-- 资源项将通过JS动态生成 -->
+            <div id="resourcesContainer">
                 <div class="resource-item">
                     <div class="resource-info">
                         <h3>暂无资源</h3>
-                        <div class="resource-meta">请等待管理员上传资源</div>
+                        <div class="resource-meta">等待管理员上传</div>
                     </div>
                 </div>
             </div>
@@ -218,94 +76,99 @@
 
     <script>
         // 全局变量
-        const ADMIN_PASSWORD = "admin123"; // 默认管理员密码，可自行修改
+        const ADMIN_PWD = "admin123";
         let isAdmin = false;
-        let resources = JSON.parse(localStorage.getItem('resources')) || [];
+        let resources = JSON.parse(localStorage.getItem('sharedResources')) || [];
 
         // DOM元素
-        const adminBtn = document.getElementById('admin-btn');
-        const memberBtn = document.getElementById('member-btn');
-        const adminLogin = document.getElementById('admin-login');
-        const loginSubmit = document.getElementById('login-submit');
-        const adminPassword = document.getElementById('admin-password');
-        const loginError = document.getElementById('login-error');
-        const uploadSection = document.getElementById('upload-section');
-        const uploadSubmit = document.getElementById('upload-submit');
-        const resourceName = document.getElementById('resource-name');
-        const resourceFile = document.getElementById('resource-file');
-        const resourcesContainer = document.getElementById('resources-container');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const memberEnterBtn = document.getElementById('memberEnterBtn');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const doLoginBtn = document.getElementById('doLoginBtn');
+        const adminPwd = document.getElementById('adminPwd');
+        const loginError = document.getElementById('loginError');
+        const uploadArea = document.getElementById('uploadArea');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const resourceName = document.getElementById('resourceName');
+        const resourceFile = document.getElementById('resourceFile');
+        const resourcesContainer = document.getElementById('resourcesContainer');
 
-        // 初始化页面
+        // 初始化渲染
         renderResources();
 
-        // 管理员登录按钮点击事件
-        adminBtn.addEventListener('click', () => {
-            adminLogin.classList.add('active');
-            isAdmin = false;
-            uploadSection.classList.remove('active');
+        // 管理员登录按钮点击
+        adminLoginBtn.addEventListener('click', () => {
+            adminLoginForm.classList.remove('hidden');
+            uploadArea.classList.add('hidden');
+            loginError.textContent = '';
         });
 
-        // 普通成员按钮点击事件
-        memberBtn.addEventListener('click', () => {
-            adminLogin.classList.remove('active');
-            uploadSection.classList.remove('active');
+        // 普通成员进入
+        memberEnterBtn.addEventListener('click', () => {
+            adminLoginForm.classList.add('hidden');
+            uploadArea.classList.add('hidden');
             isAdmin = false;
+            renderResources();
         });
 
-        // 管理员登录提交
-        loginSubmit.addEventListener('click', () => {
-            const password = adminPassword.value.trim();
-            if (password === ADMIN_PASSWORD) {
+        // 执行登录
+        doLoginBtn.addEventListener('click', () => {
+            const pwd = adminPwd.value.trim();
+            if (pwd === ADMIN_PWD) {
                 loginError.textContent = '';
-                adminLogin.classList.remove('active');
-                uploadSection.classList.add('active');
+                adminLoginForm.classList.add('hidden');
+                uploadArea.classList.remove('hidden');
                 isAdmin = true;
-                renderResources(); // 重新渲染资源列表（显示删除按钮）
+                renderResources(); // 登录后重新渲染，显示删除按钮
+                alert('登录成功！');
             } else {
-                loginError.textContent = '密码错误，请重新输入！';
+                loginError.textContent = '密码错误！';
             }
-            adminPassword.value = '';
+            adminPwd.value = '';
         });
 
-        // 上传资源提交
-        uploadSubmit.addEventListener('click', () => {
+        // 上传资源
+        uploadBtn.addEventListener('click', () => {
+            if (!isAdmin) {
+                alert('请先以管理员身份登录！');
+                return;
+            }
             const name = resourceName.value.trim();
             const file = resourceFile.files[0];
-
             if (!name || !file) {
                 alert('请输入资源名称并选择文件！');
                 return;
             }
 
-            // 创建资源对象
+            // 生成资源对象
             const resource = {
-                id: Date.now(), // 唯一ID
+                id: Date.now(),
                 name: name,
                 fileName: file.name,
-                size: formatFileSize(file.size),
-                uploadTime: new Date().toLocaleString(),
-                fileUrl: URL.createObjectURL(file) // 创建临时文件URL
+                size: (file.size / 1024).toFixed(2) + 'KB',
+                time: new Date().toLocaleString(),
+                url: URL.createObjectURL(file)
             };
 
-            // 添加到资源列表并保存到本地存储
+            // 保存到本地存储
             resources.unshift(resource);
-            localStorage.setItem('resources', JSON.stringify(resources));
+            localStorage.setItem('sharedResources', JSON.stringify(resources));
+            renderResources();
 
-            // 重置表单并重新渲染
+            // 重置表单
             resourceName.value = '';
             resourceFile.value = '';
-            renderResources();
-            alert('资源上传成功！');
+            alert('上传成功！');
         });
 
-        // 渲染资源列表
+        // 渲染资源列表（已添加删除按钮）
         function renderResources() {
             if (resources.length === 0) {
                 resourcesContainer.innerHTML = `
                     <div class="resource-item">
                         <div class="resource-info">
                             <h3>暂无资源</h3>
-                            <div class="resource-meta">请等待管理员上传资源</div>
+                            <div class="resource-meta">等待管理员上传</div>
                         </div>
                     </div>
                 `;
@@ -313,46 +176,32 @@
             }
 
             let html = '';
-            resources.forEach(resource => {
+            resources.forEach(item => {
                 html += `
-                    <div class="resource-item" data-id="${resource.id}">
+                    <div class="resource-item">
                         <div class="resource-info">
-                            <h3>${resource.name}</h3>
-                            <div class="resource-meta">
-                                文件名：${resource.fileName} | 大小：${resource.size} | 上传时间：${resource.uploadTime}
-                            </div>
+                            <h3>${item.name}</h3>
+                            <div class="resource-meta">${item.fileName} | ${item.size} | ${item.time}</div>
                         </div>
-                        <div class="resource-actions">
-                            <a href="${resource.fileUrl}" download="${resource.name}" class="download-btn">下载</a>
-                            ${isAdmin ? `<button class="delete-btn" data-id="${resource.id}">删除</button>` : ''}
+                        <div class="action-btns">
+                            <a href="${item.url}" download="${item.name}" class="btn btn-primary">下载</a>
+                            ${isAdmin ? `<button class="btn btn-danger" onclick="deleteResource(${item.id})">删除</button>` : ''}
                         </div>
                     </div>
                 `;
             });
-
             resourcesContainer.innerHTML = html;
+        }
 
-            // 绑定删除按钮事件
-            if (isAdmin) {
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = parseInt(e.target.dataset.id);
-                        if (confirm('确定要删除该资源吗？')) {
-                            resources = resources.filter(resource => resource.id !== id);
-                            localStorage.setItem('resources', JSON.stringify(resources));
-                            renderResources();
-                        }
-                    });
-                });
+        // 删除资源函数（核心功能）
+        window.deleteResource = function(id) {
+            if (confirm('确定要删除该资源吗？删除后不可恢复！')) {
+                resources = resources.filter(item => item.id !== id);
+                localStorage.setItem('sharedResources', JSON.stringify(resources));
+                renderResources();
+                alert('删除成功！');
             }
-        }
-
-        // 格式化文件大小
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
-            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-        }
+        };
     </script>
 </body>
 </html>
