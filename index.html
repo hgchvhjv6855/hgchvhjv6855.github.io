@@ -82,21 +82,29 @@
             justify-content: space-between;
             width: 100%;
             margin-top: 5px;
+            gap: 10px;
         }
         
         .control-btn {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border: none;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
-            min-width: 70px;
+            min-width: 60px;
+            flex: 1;
+            text-align: center;
         }
         
         #pauseBtn {
             background: linear-gradient(to right, #0ea5e9, #3b82f6);
+            color: white;
+        }
+        
+        #fastDropBtn {
+            background: linear-gradient(to right, #10b981, #059669);
             color: white;
         }
         
@@ -175,9 +183,9 @@
             }
             
             .control-btn {
-                padding: 10px 20px;
-                font-size: 1rem;
-                min-width: 80px;
+                padding: 10px 12px;
+                font-size: 0.9rem;
+                min-width: 70px;
             }
             
             .key-hint {
@@ -224,14 +232,15 @@
             
             <div class="control-bar">
                 <button class="control-btn" id="pauseBtn">暂停</button>
+                <button class="control-btn" id="fastDropBtn">快速下落</button>
                 <button class="control-btn" id="restartBtn">重来</button>
             </div>
             
-            <div class="key-hint">键盘: ← → 移动 | ↑ 旋转 | P 暂停</div>
+            <div class="key-hint">键盘: ← → 移动 | ↑ 旋转 | ↓ 快速下落 | P 暂停</div>
         </div>
         
         <div class="instructions">
-            触屏: 左右滑动移动方块 | 点击旋转 | 双击暂停
+            触屏: 左右滑动移动方块 | 点击旋转 | 快速下落按钮 | 双击暂停
         </div>
     </div>
 
@@ -503,6 +512,34 @@
             dropCounter = 0;
         }
         
+        // 玩家快速下落（新增功能）
+        function playerFastDrop() {
+            if (gameOver || gamePaused) return;
+            
+            // 记录快速下落的距离，用于可能的加分
+            let dropCount = 0;
+            
+            // 一直下落直到碰撞
+            while (!collide(board, player)) {
+                player.pos.y++;
+                dropCount++;
+            }
+            
+            // 回到碰撞前的位置
+            player.pos.y--;
+            
+            // 如果有下落，处理碰撞
+            if (dropCount > 0) {
+                // 根据下落距离给予少量奖励分数
+                score += Math.min(dropCount, 5);
+                
+                merge(board, player);
+                playerReset();
+                sweep();
+                updateScore();
+            }
+        }
+        
         // 重置玩家方块
         function playerReset() {
             player.matrix = nextPieceMatrix;
@@ -625,8 +662,8 @@
                 case 38: // 上箭头
                     playerRotate(1);
                     break;
-                case 40: // 下箭头（单次下落）
-                    playerDrop();
+                case 40: // 下箭头（快速下落）
+                    playerFastDrop();
                     break;
                 case 32: // 空格键（旋转）
                     playerRotate(1);
@@ -700,6 +737,7 @@
         
         // 按钮事件监听
         document.getElementById('pauseBtn').addEventListener('click', togglePause);
+        document.getElementById('fastDropBtn').addEventListener('click', playerFastDrop);
         document.getElementById('restartBtn').addEventListener('click', init);
         document.getElementById('restartGameBtn').addEventListener('click', init);
         
