@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>俄罗斯方块</title>
     <style>
         * {
@@ -10,64 +10,65 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
         }
         
         body {
             display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+        }
+        
+        .game-wrapper {
+            display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            background: #0f172a;
-            color: #fff;
-            padding: 10px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
+            gap: 15px;
         }
         
         .game-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 400px;
-            background: #1e293b;
-            border-radius: 10px;
+            background: #0f172a;
+            border-radius: 12px;
             padding: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border: 1px solid #334155;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 2px solid #334155;
         }
         
         .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
         }
         
         .game-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #0ea5e9;
             font-weight: bold;
         }
         
         .score-display {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #f8fafc;
             font-weight: bold;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 6px 12px;
+            border-radius: 6px;
         }
         
         .game-area {
             position: relative;
-            width: 100%;
-            aspect-ratio: 0.5;
+            width: 250px;
+            height: 400px;
             background: #0f172a;
             border-radius: 8px;
             border: 2px solid #334155;
             overflow: hidden;
-            margin-bottom: 10px;
         }
         
         #gameCanvas {
@@ -76,39 +77,41 @@
             height: 100%;
         }
         
-        .controls {
+        .control-bar {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
         }
         
         .control-btn {
-            flex: 1;
-            padding: 12px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
-            background: #334155;
+            min-width: 70px;
+        }
+        
+        #pauseBtn {
+            background: linear-gradient(to right, #0ea5e9, #3b82f6);
+            color: white;
+        }
+        
+        #restartBtn {
+            background: linear-gradient(to right, #ef4444, #dc2626);
             color: white;
         }
         
         .control-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         
         .control-btn:active {
             transform: translateY(0);
-        }
-        
-        #pauseBtn {
-            background: #0ea5e9;
-        }
-        
-        #restartBtn {
-            background: #ef4444;
         }
         
         .game-over {
@@ -127,41 +130,66 @@
         }
         
         .game-over h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #ef4444;
             margin-bottom: 15px;
-            text-align: center;
         }
         
         .game-over p {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 20px;
-            text-align: center;
+            color: white;
         }
         
         .instructions {
-            margin-top: 15px;
             color: #94a3b8;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             text-align: center;
             line-height: 1.4;
+            margin-top: 10px;
+            max-width: 250px;
         }
         
-        @media (max-width: 480px) {
-            .game-container {
-                padding: 10px;
+        /* 键盘提示 */
+        .key-hint {
+            display: none;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        /* 电脑端样式 */
+        @media (min-width: 768px) {
+            .game-area {
+                width: 300px;
+                height: 480px;
             }
             
             .game-title {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
             }
             
             .score-display {
-                font-size: 1rem;
+                font-size: 1.3rem;
+                padding: 8px 16px;
             }
             
             .control-btn {
-                padding: 10px;
+                padding: 10px 20px;
+                font-size: 1rem;
+                min-width: 80px;
+            }
+            
+            .key-hint {
+                display: block;
+            }
+            
+            .control-bar {
+                width: 300px;
+            }
+            
+            .instructions {
+                max-width: 300px;
                 font-size: 0.9rem;
             }
         }
@@ -178,29 +206,33 @@
     </style>
 </head>
 <body class="no-context-menu">
-    <div class="game-container">
-        <div class="game-header">
-            <div class="game-title">俄罗斯方块</div>
-            <div class="score-display">分数: <span id="score">0</span></div>
-        </div>
-        
-        <div class="game-area">
-            <canvas id="gameCanvas"></canvas>
-            <div class="game-over" id="gameOverScreen">
-                <h2>游戏结束</h2>
-                <p>得分: <span id="finalScore">0</span></p>
-                <button id="restartGameBtn" class="control-btn" style="margin-top: 15px;">重新开始</button>
+    <div class="game-wrapper">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="game-title">俄罗斯方块</div>
+                <div class="score-display">分数: <span id="score">0</span></div>
             </div>
+            
+            <div class="game-area">
+                <canvas id="gameCanvas"></canvas>
+                <div class="game-over" id="gameOverScreen">
+                    <h2>游戏结束</h2>
+                    <p>得分: <span id="finalScore">0</span></p>
+                    <button id="restartGameBtn" class="control-btn" style="margin-top: 15px;">重新开始</button>
+                </div>
+            </div>
+            
+            <div class="control-bar">
+                <button class="control-btn" id="pauseBtn">暂停</button>
+                <button class="control-btn" id="restartBtn">重来</button>
+            </div>
+            
+            <div class="key-hint">键盘: ← → 移动 | ↑ 旋转 | P 暂停</div>
         </div>
         
-        <div class="controls">
-            <button class="control-btn" id="pauseBtn">暂停</button>
-            <button class="control-btn" id="restartBtn">重来</button>
+        <div class="instructions">
+            触屏: 左右滑动移动方块 | 点击旋转 | 双击暂停
         </div>
-    </div>
-    
-    <div class="instructions">
-        移动: ← → | 旋转: ↑ | 暂停: P | 触屏: 滑动控制，点击旋转
     </div>
 
     <script>
@@ -261,11 +293,12 @@
         // 游戏变量
         let canvas = document.getElementById('gameCanvas');
         let ctx = canvas.getContext('2d');
+        let blockSize = 20;
         let score = 0;
         let gameOver = false;
         let gamePaused = false;
         let dropCounter = 0;
-        let dropInterval = 1000; // 初始下落速度(毫秒)
+        let dropInterval = 1000;
         let lastTime = 0;
         
         // 游戏板矩阵
@@ -304,52 +337,47 @@
             };
         }
         
-        // 调整canvas大小
-        function adjustCanvasSize() {
+        // 设置canvas尺寸
+        function setCanvasSize() {
             const container = document.querySelector('.game-area');
-            const containerWidth = container.clientWidth;
-            const containerHeight = container.clientHeight;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
             
-            // 计算合适的BLOCK_SIZE
-            const blockSizeByWidth = Math.floor(containerWidth / COLS);
-            const blockSizeByHeight = Math.floor(containerHeight / ROWS);
-            const blockSize = Math.min(blockSizeByWidth, blockSizeByHeight);
+            // 计算合适的方块大小
+            blockSize = Math.min(
+                Math.floor(width / COLS),
+                Math.floor(height / ROWS)
+            );
             
             const canvasWidth = blockSize * COLS;
             const canvasHeight = blockSize * ROWS;
             
-            // 更新canvas尺寸
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
         }
         
         // 绘制方块
         function drawBlock(ctx, x, y, color) {
-            const size = canvas.width / COLS;
-            
             ctx.fillStyle = color;
-            ctx.fillRect(x * size, y * size, size, size);
+            ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
             
-            // 添加方块内部渐变效果
             ctx.strokeStyle = '#0f172a';
             ctx.lineWidth = 2;
-            ctx.strokeRect(x * size, y * size, size, size);
+            ctx.strokeRect(x * blockSize, y * blockSize, blockSize, blockSize);
             
             // 添加高光效果
             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-            ctx.fillRect(x * size, y * size, size - 2, 3);
-            ctx.fillRect(x * size, y * size, 3, size - 2);
+            ctx.fillRect(x * blockSize, y * blockSize, blockSize - 2, 3);
+            ctx.fillRect(x * blockSize, y * blockSize, 3, blockSize - 2);
             
             // 添加阴影效果
             ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(x * size + 3, y * size + size - 3, size - 3, 3);
-            ctx.fillRect(x * size + size - 3, y * size + 3, 3, size - 3);
+            ctx.fillRect(x * blockSize + 3, y * blockSize + blockSize - 3, blockSize - 3, 3);
+            ctx.fillRect(x * blockSize + blockSize - 3, y * blockSize + 3, 3, blockSize - 3);
         }
         
         // 绘制游戏板
         function drawBoard() {
-            const size = canvas.width / COLS;
-            
             // 绘制背景
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -359,7 +387,7 @@
             ctx.lineWidth = 1;
             for (let y = 0; y < ROWS; y++) {
                 for (let x = 0; x < COLS; x++) {
-                    ctx.strokeRect(x * size, y * size, size, size);
+                    ctx.strokeRect(x * blockSize, y * blockSize, blockSize, blockSize);
                 }
             }
             
@@ -477,7 +505,6 @@
         
         // 重置玩家方块
         function playerReset() {
-            // 设置当前方块为预览的下一个方块
             player.matrix = nextPieceMatrix;
             player.pos.y = 0;
             player.pos.x = Math.floor(COLS / 2) - Math.floor(player.matrix[0].length / 2);
@@ -517,7 +544,7 @@
                 const linePoints = [0, 40, 100, 300, 1200];
                 score += linePoints[rowCount];
                 
-                // 加快游戏速度（简化版，不显示等级）
+                // 加快游戏速度
                 dropInterval = Math.max(200, 1000 - Math.floor(score / 1000) * 100);
                 
                 // 更新显示
@@ -568,8 +595,8 @@
             nextPieceMatrix = createPiece().matrix;
             playerReset();
             
-            // 调整canvas大小
-            adjustCanvasSize();
+            // 设置canvas尺寸
+            setCanvasSize();
             
             // 开始游戏循环
             lastTime = 0;
@@ -584,7 +611,7 @@
             document.getElementById('pauseBtn').textContent = gamePaused ? '继续' : '暂停';
         }
         
-        // 键盘控制（简化版）
+        // 键盘控制（电脑端）
         document.addEventListener('keydown', event => {
             if (gameOver) return;
             
@@ -598,13 +625,22 @@
                 case 38: // 上箭头
                     playerRotate(1);
                     break;
+                case 40: // 下箭头（单次下落）
+                    playerDrop();
+                    break;
+                case 32: // 空格键（旋转）
+                    playerRotate(1);
+                    break;
                 case 80: // P键暂停
                     togglePause();
+                    break;
+                case 82: // R键重新开始
+                    init();
                     break;
             }
         });
         
-        // 触屏控制
+        // 触屏控制（移动端）
         let touchStartX = 0;
         let touchStartY = 0;
         let touchStartTime = 0;
@@ -647,8 +683,20 @@
                     playerMove(-1); // 向左
                 }
             }
-            // 垂直滑动不做任何操作，方块会自动下落
         }, {passive: false});
+        
+        // 双击暂停/继续
+        let lastTap = 0;
+        canvas.addEventListener('touchend', function(event) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+                togglePause();
+            }
+            
+            lastTap = currentTime;
+        });
         
         // 按钮事件监听
         document.getElementById('pauseBtn').addEventListener('click', togglePause);
@@ -662,18 +710,13 @@
             }
         }, {passive: false});
         
-        // 双击暂停/继续
-        canvas.addEventListener('dblclick', function(event) {
-            togglePause();
-        });
-        
         // 初始化游戏
         init();
         
         // 窗口大小变化时调整canvas
-        window.addEventListener('resize', adjustCanvasSize);
+        window.addEventListener('resize', setCanvasSize);
         window.addEventListener('orientationchange', function() {
-            setTimeout(adjustCanvasSize, 100);
+            setTimeout(setCanvasSize, 100);
         });
     </script>
 </body>
